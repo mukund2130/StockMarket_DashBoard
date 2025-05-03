@@ -241,3 +241,24 @@ def get_news(symbol):
             "url": f"https://finance.yahoo.com/quote/{symbol}/news"
         },
     ]
+
+def calculate_investment_return(symbol, amount, period):
+    df = yf.download(symbol, period=period)
+    if df.empty:
+        return f"No data available for {symbol}."
+
+    start_price = float(df['Close'].iloc[0])
+    end_price = float(df['Close'].iloc[-1])
+    shares = amount / start_price
+    final_value = shares * end_price
+    profit = final_value - amount
+
+    return {
+        "Symbol": symbol,
+        "Investment Amount": f"${amount:.2f}",
+        "Start Price": f"${start_price:.2f}",
+        "End Price": f"${end_price:.2f}",
+        "Shares Bought": f"{shares:.2f}",
+        "Final Value": f"${final_value:.2f}",
+        "Profit/Loss": f"${profit:.2f}"
+    }
