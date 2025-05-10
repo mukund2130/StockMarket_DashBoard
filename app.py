@@ -239,4 +239,3 @@ if st.button("Run Prediction"):
             st.info("⚖️ Forecast indicates a neutral trend. No strong movement expected.")
     else:
         st.error("Prediction data not available.")
-
