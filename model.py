@@ -15,8 +15,8 @@ def get_market_summary():
     gainers, losers, active = [], [], []
 
     for symbol in symbols:
-        df = data[symbol]
-        if df.empty or len(df) < 2:
+        df = data.get(symbol)
+        if df is None or df.empty or len(df) < 2:
             continue
 
         close_today = df['Close'].iloc[-1]
@@ -49,8 +49,8 @@ def get_trending_stocks():
         trending_data = []
 
         for symbol in symbols:
-            df = data[symbol]
-            if df.empty or len(df) < 2:
+            df = data.get(symbol)
+            if df is None or df.empty or len(df) < 2:
                 continue
 
             close_today = df['Close'].iloc[-1]
@@ -79,17 +79,16 @@ def get_trending_stocks():
     except Exception as e:
         return {"error": str(e)}
 
-
 def get_index_summary():
     indices = {'^GSPC': 'S&P 500', '^IXIC': 'NASDAQ', '^DJI': 'Dow Jones'}
     data = yf.download(list(indices.keys()), period="2d", group_by='ticker')
-    summary = []
 
+    summary = []
     for symbol, name in indices.items():
-        df = data[symbol]
-        if df.empty or len(df) < 2:
+        df = data.get(symbol)
+        if df is None or df.empty or len(df) < 2:
             continue
-        close = df['Close'].iloc[-1]
+        close = df['Close'].iloc[-1]  # Access the 'Close' column
         prev = df['Close'].iloc[-2]
         change = close - prev
         percent = (change / prev) * 100
@@ -210,7 +209,6 @@ def get_risk_metrics(symbol):
         "volatility": round(volatility, 4),
         "risk": risk
     }
-
 
 def get_watchlist():
     if os.path.exists(WATCHLIST_FILE):
